@@ -16,7 +16,10 @@ public class Tile : MonoBehaviour
     public Tile parent = null;
     public int distance = 0;
 
-
+    // For A* Pathfinding
+    public float f = 0; // F is G + H
+    public float g = 0; // G is the cost from the parent to the current tile
+    public float h = 0; // H (or heuristic) is the cost of the processed tile (current tile) to the destination
 
     // Start is called before the first frame update
     void Start()
@@ -49,7 +52,6 @@ public class Tile : MonoBehaviour
     {
         adjacencyList.Clear();
 
-        walkable = true;
         current = false;
         target = false;
         selectable = false;
@@ -57,19 +59,21 @@ public class Tile : MonoBehaviour
         visited = false;
         parent = null;
         distance = 0;
+
+        f = g = h = 0;
     }
 
-    public void FindNeighbours(float jumpHeight)
+    public void FindNeighbours(float jumpHeight, Tile target)
     {
         Reset();
 
-        CheckTile(Vector3.forward, jumpHeight);
-        CheckTile(-Vector3.forward, jumpHeight);
-        CheckTile(Vector3.right, jumpHeight);
-        CheckTile(-Vector3.right, jumpHeight);
+        CheckTile(Vector3.forward, jumpHeight, target);
+        CheckTile(-Vector3.forward, jumpHeight, target);
+        CheckTile(Vector3.right, jumpHeight, target);
+        CheckTile(-Vector3.right, jumpHeight, target);
     }
 
-    public void CheckTile(Vector3 direction, float jumpHeight)
+    public void CheckTile(Vector3 direction, float jumpHeight, Tile target)
     {
         Vector3 halfExtents = new Vector3(0.25f, (1 + jumpHeight) / 2.0f, 0.25f);
         Collider[] colliders = Physics.OverlapBox(transform.position + direction, halfExtents);
@@ -81,7 +85,7 @@ public class Tile : MonoBehaviour
             {
                 RaycastHit hit;
 
-                if(!Physics.Raycast(tile.transform.position, Vector3.up, out hit, 1))
+                if(!Physics.Raycast(tile.transform.position, Vector3.up, out hit, 1) || (tile == target))
                 {
                     adjacencyList.Add(tile);
                 }
