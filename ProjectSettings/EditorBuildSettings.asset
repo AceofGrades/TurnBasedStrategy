@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Main Menu.unity
+    guid: bb000613d9dadf049894d1e8280f18af
+  - enabled: 1
+    path: Assets/TurnBasedStrategy3D.unity
+    guid: 3109217ac2b56ec4a92be40c5e2ade94
   m_configObjects: {}
