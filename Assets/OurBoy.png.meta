@@ -3,16 +3,16 @@ guid: 1a08c1e8c8ca51e4b8a7c1cbfdb68e16
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5108601841118324724
+      213: 21300000
     second: ezgif.com-gif-maker_0
   - first:
-      213: 763718201113852716
+      213: 21300002
     second: ezgif.com-gif-maker_1
   - first:
-      213: 1037891125679955185
+      213: 21300004
     second: ezgif.com-gif-maker_2
   - first:
-      213: 6965229494165062650
+      213: 21300006
     second: ezgif.com-gif-maker_3
   externalObjects: {}
   serializedVersion: 10
@@ -81,7 +81,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
   - serializedVersion: 3
     buildTarget: Standalone
     maxTextureSize: 2048
@@ -93,7 +93,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -113,7 +113,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 4f7a3c6de4665e640800000000000000
-      internalID: 5108601841118324724
+      internalID: 21300000
       vertices: []
       indices: 
       edges: []
@@ -134,7 +134,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: c2b34e558a5499a00800000000000000
-      internalID: 763718201113852716
+      internalID: 21300002
       vertices: []
       indices: 
       edges: []
@@ -155,7 +155,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 1fc1fa5da74576e00800000000000000
-      internalID: 1037891125679955185
+      internalID: 21300004
       vertices: []
       indices: 
       edges: []
@@ -176,7 +176,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: af348c2525779a060800000000000000
-      internalID: 6965229494165062650
+      internalID: 21300006
       vertices: []
       indices: 
       edges: []
