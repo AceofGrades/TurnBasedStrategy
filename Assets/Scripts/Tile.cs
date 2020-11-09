@@ -8,6 +8,7 @@ public class Tile : MonoBehaviour
     public bool current = false;
     public bool target = false;
     public bool selectable = false;
+    public bool attackable = false;
 
     public List<Tile> adjacencyList = new List<Tile>();
 
@@ -32,13 +33,17 @@ public class Tile : MonoBehaviour
     {
         if (current)
         {
-            GetComponent<Renderer>().material.color = Color.magenta;
+            GetComponent<Renderer>().material.color = Color.cyan;
         }
         else if (target)
         {
             GetComponent<Renderer>().material.color = Color.green;
         }
         else if (selectable)
+        {
+            GetComponent<Renderer>().material.color = Color.cyan;
+        }
+        else if (attackable)
         {
             GetComponent<Renderer>().material.color = Color.red;
         }
@@ -55,6 +60,7 @@ public class Tile : MonoBehaviour
         current = false;
         target = false;
         selectable = false;
+        attackable = false;
 
         visited = false;
         parent = null;

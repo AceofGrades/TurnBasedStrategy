@@ -7,6 +7,7 @@ public class TacticsMove : MonoBehaviour
     public bool turn = false;
 
     List<Tile> selectableTiles = new List<Tile>();
+    List<Tile> attackableTiles = new List<Tile>();
     GameObject[] tiles;
 
     Stack<Tile> path = new Stack<Tile>();
