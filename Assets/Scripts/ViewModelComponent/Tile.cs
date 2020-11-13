@@ -6,6 +6,10 @@ public class Tile : MonoBehaviour
 {
     public Point pos;
     public int height;
+    public GameObject content;
+
+    [HideInInspector] public Tile prev;
+    [HideInInspector] public int distance;
 
     public const float stepHeight = 0.25f;
     public Vector3 center
