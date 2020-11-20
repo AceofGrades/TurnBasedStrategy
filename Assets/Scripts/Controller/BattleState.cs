@@ -10,6 +10,10 @@ public class BattleState : State
     public LevelData levelData { get { return owner.levelData; } }
     public Transform tileSelectionIndicator { get { return owner.tileSelectionIndicator; } }
     public Point pos { get { return owner.pos; } set { owner.pos = value; } }
+    public AbilityMenuPanelController abilityMenuPanelController { get { return owner.abilityMenuPanelController; } }
+    public Turn turn { get { return owner.turn; } }
+    public List<Unit> units { get { return owner.units; } }
+
     protected virtual void Awake()
     {
         owner = GetComponent<BattleController>();
@@ -25,6 +29,7 @@ public class BattleState : State
         InputController.moveEvent -= OnMove;
         InputController.fireEvent -= OnFire;
     }
+
     protected virtual void OnMove(object sender, InfoEventArgs<Point> e)
     {
 
@@ -34,6 +39,7 @@ public class BattleState : State
     {
 
     }
+
     protected virtual void SelectTile(Point p)
     {
         if (pos == p || !board.tiles.ContainsKey(p))
