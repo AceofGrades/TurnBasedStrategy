@@ -10,10 +10,18 @@ public class SelectUnitState : BattleState
         base.Enter();
         StartCoroutine("ChangeCurrentUnit");
     }
+
+    public override void Exit()
+    {
+        base.Exit();
+        statPanelController.HidePrimary();
+    }
+
     IEnumerator ChangeCurrentUnit()
     {
         index = (index + 1) % units.Count;
         turn.Change(units[index]);
+        RefreshPrimaryStatPanel(pos);
         yield return null;
         owner.ChangeState<CommandSelectionState>();
     }
