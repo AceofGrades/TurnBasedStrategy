@@ -11,6 +11,7 @@ public class InitBattleState : BattleState
     }
     IEnumerator Init()
     {
+        owner.round = owner.gameObject.AddComponent<TurnOrderController>().Round();
         board.Load(levelData);
         Point p = new Point((int)levelData.tiles[0].x, (int)levelData.tiles[0].z);
         SelectTile(p);
