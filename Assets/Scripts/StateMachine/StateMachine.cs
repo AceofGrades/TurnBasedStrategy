@@ -23,6 +23,7 @@ public class StateMachine : MonoBehaviour
     {
         CurrentState = GetState<T>();
     }
+
     protected virtual void Transition(State value)
     {
         if (_currentState == value || _inTransition)

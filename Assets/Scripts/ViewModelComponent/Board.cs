@@ -5,110 +5,115 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
-    [SerializeField] GameObject tilePrefab;
-    public Dictionary<Point, Tile> tiles = new Dictionary<Point, Tile>();
-    Color selectedTileColor = new Color(0, 1, 1, 1);
-    Color defaultTileColor = new Color(1, 1, 1, 1);
-    public Point min { get { return _min; } }
-    public Point max { get { return _max; } }
-    Point _min;
-    Point _max;
-    public void Load(LevelData data)
-    {
-        _min = new Point(int.MaxValue, int.MaxValue);
-        _max = new Point(int.MinValue, int.MinValue);
-        for (int i = 0; i < data.tiles.Count; ++i)
-        {
-            GameObject instance = Instantiate(tilePrefab) as GameObject;
-            Tile t = instance.GetComponent<Tile>();
-            t.Load(data.tiles[i]);
-            tiles.Add(t.pos, t);
-            _min.x = Mathf.Min(_min.x, t.pos.x);
-            _min.y = Mathf.Min(_min.y, t.pos.y);
-            _max.x = Mathf.Max(_max.x, t.pos.x);
-            _max.y = Mathf.Max(_max.y, t.pos.y);
-        }
-    }
+	#region Fields / Properties
+	[SerializeField] GameObject tilePrefab;
+	public Dictionary<Point, Tile> tiles = new Dictionary<Point, Tile>();
+	public Point min { get { return _min; } }
+	public Point max { get { return _max; } }
+	Point _min;
+	Point _max;
+	Point[] dirs = new Point[4]
+	{
+		new Point(0, 1),
+		new Point(0, -1),
+		new Point(1, 0),
+		new Point(-1, 0)
+	};
+	Color selectedTileColor = new Color(0, 1, 1, 1);
+	Color defaultTileColor = new Color(1, 1, 1, 1);
+	#endregion
 
-    public List<Tile> Search(Tile start, Func<Tile, Tile, bool> addTile)
-    {
-        List<Tile> retValue = new List<Tile>();
-        retValue.Add(start);
+	#region Public
+	public void Load(LevelData data)
+	{
+		_min = new Point(int.MaxValue, int.MaxValue);
+		_max = new Point(int.MinValue, int.MinValue);
 
-        ClearSearch();
-        Queue<Tile> checkNext = new Queue<Tile>();
-        Queue<Tile> checkNow = new Queue<Tile>();
-        start.distance = 0;
-        checkNow.Enqueue(start);
+		for (int i = 0; i < data.tiles.Count; ++i)
+		{
+			GameObject instance = Instantiate(tilePrefab) as GameObject;
+			instance.transform.SetParent(transform);
+			Tile t = instance.GetComponent<Tile>();
+			t.Load(data.tiles[i]);
+			tiles.Add(t.pos, t);
 
-        while (checkNow.Count > 0)
-        {
-            Tile t = checkNow.Dequeue();
-            for (int i = 0; i < 4; ++i)
-            {
-                Tile next = GetTile(t.pos + dirs[i]);
-                if(next == null || next.distance <= t.distance + 1)
-                {
-                    continue;
-                }
+			_min.x = Mathf.Min(_min.x, t.pos.x);
+			_min.y = Mathf.Min(_min.y, t.pos.y);
+			_max.x = Mathf.Max(_max.x, t.pos.x);
+			_max.y = Mathf.Max(_max.y, t.pos.y);
+		}
+	}
 
-                if(addTile(t, next))
-                {
-                    next.distance = t.distance + 1;
-                    next.prev = t;
-                    checkNext.Enqueue(next);
-                    retValue.Add(next);
-                }
-            }
-            if(checkNow.Count == 0)
-            {
-                SwapReference(ref checkNow, ref checkNext);
-            }
-        }
+	public Tile GetTile(Point p)
+	{
+		return tiles.ContainsKey(p) ? tiles[p] : null;
+	}
 
-        return retValue;
-    }
+	public List<Tile> Search(Tile start, Func<Tile, Tile, bool> addTile)
+	{
+		List<Tile> retValue = new List<Tile>();
+		retValue.Add(start);
 
-    void ClearSearch()
-    {
-        foreach (Tile t in tiles.Values)
-        {
-            t.prev = null;
-            t.distance = int.MaxValue;
-        }
-    }
+		ClearSearch();
+		Queue<Tile> checkNext = new Queue<Tile>();
+		Queue<Tile> checkNow = new Queue<Tile>();
 
-    Point[] dirs = new Point[4]
-    {
-        new Point(0, 1),
-        new Point(0, -1),
-        new Point(1, 0),
-        new Point(-1, 0)
-    };
+		start.distance = 0;
+		checkNow.Enqueue(start);
 
-    public Tile GetTile(Point p)
-    {
-        return tiles.ContainsKey(p) ? tiles[p] : null;
-    }
+		while (checkNow.Count > 0)
+		{
+			Tile t = checkNow.Dequeue();
+			for (int i = 0; i < 4; ++i)
+			{
+				Tile next = GetTile(t.pos + dirs[i]);
+				if (next == null || next.distance <= t.distance + 1)
+					continue;
 
-    void SwapReference(ref Queue<Tile> a, ref Queue<Tile> b)
-    {
-        Queue<Tile> temp = a;
-        a = b;
-        b = temp;
-    }
+				if (addTile(t, next))
+				{
+					next.distance = t.distance + 1;
+					next.prev = t;
+					checkNext.Enqueue(next);
+					retValue.Add(next);
+				}
+			}
 
-    public void SelectTiles(List<Tile> tiles)
-    {
-        for (int i = tiles.Count - 1; i >= 0; --i)
-            tiles[i].GetComponent<Renderer>().material.SetColor("_Color", selectedTileColor);
-    }
+			if (checkNow.Count == 0)
+				SwapReference(ref checkNow, ref checkNext);
+		}
 
-        public void DeSelectTiles(List<Tile> tiles)
-    {
-        for (int i = tiles.Count - 1; i >= 0; --i)
-        {
-            tiles[i].GetComponent<Renderer>().material.SetColor("_Color", defaultTileColor);
-        }
-    }
+		return retValue;
+	}
+
+	public void SelectTiles(List<Tile> tiles)
+	{
+		for (int i = tiles.Count - 1; i >= 0; --i)
+			tiles[i].GetComponent<Renderer>().material.SetColor("_Color", selectedTileColor);
+	}
+
+	public void DeSelectTiles(List<Tile> tiles)
+	{
+		for (int i = tiles.Count - 1; i >= 0; --i)
+			tiles[i].GetComponent<Renderer>().material.SetColor("_Color", defaultTileColor);
+	}
+	#endregion
+
+	#region Private
+	void ClearSearch()
+	{
+		foreach (Tile t in tiles.Values)
+		{
+			t.prev = null;
+			t.distance = int.MaxValue;
+		}
+	}
+
+	void SwapReference(ref Queue<Tile> a, ref Queue<Tile> b)
+	{
+		Queue<Tile> temp = a;
+		a = b;
+		b = temp;
+	}
+	#endregion
 }
