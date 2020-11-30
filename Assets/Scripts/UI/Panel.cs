@@ -91,10 +91,8 @@ public class Panel : MonoBehaviour
 		CurrentPosition = p;
 		if (CurrentPosition == null)
 			return null;
-
 		if (InTransition)
-			Transition.Stop();
-
+			Transition.easingControl.Stop();
 		if (animated)
 		{
 			Transition = anchor.MoveToAnchorPosition(p.myAnchor, p.parentAnchor, p.offset);

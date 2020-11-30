@@ -62,13 +62,11 @@ public class WalkMovement : Movement
 	IEnumerator Jump(Tile to)
 	{
 		Tweener tweener = transform.MoveTo(to.center, 0.5f, EasingEquations.Linear);
-
-		Tweener t2 = jumper.MoveToLocal(new Vector3(0, Tile.stepHeight * 2f, 0), tweener.duration / 2f, EasingEquations.EaseOutQuad);
-		t2.loopCount = 1;
-		t2.loopType = EasingControl.LoopType.PingPong;
-
+		Tweener t2 = jumper.MoveToLocal(new Vector3(0, Tile.stepHeight * 2f, 0), tweener.easingControl.duration / 2f, EasingEquations.EaseOutQuad);
+		t2.easingControl.loopCount = 1;
+		t2.easingControl.loopType = EasingControl.LoopType.PingPong;
 		while (tweener != null)
 			yield return null;
+		#endregion
 	}
-	#endregion
 }
