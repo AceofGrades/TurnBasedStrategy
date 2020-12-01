@@ -5,42 +5,56 @@ using UnityEngine;
 
 public class ConversationController : MonoBehaviour
 {
-    [SerializeField] ConversationPanel leftPanel;
-    [SerializeField] ConversationPanel rightPanel;
+	#region Events
+	public static event EventHandler completeEvent;
+	#endregion
 
-    Canvas canvas;
-    IEnumerator conversation;
-    Tweener transition;
-    const string ShowTop = "Show Top";
-    const string ShowBottom = "Show Bottom";
-    const string HideTop = "Hide Top";
-    const string HideBottom = "Hide Bottom";
+	#region Const
+	const string ShowTop = "Show Top";
+	const string ShowBottom = "Show Bottom";
+	const string HideTop = "Hide Top";
+	const string HideBottom = "Hide Bottom";
+	#endregion
 
-    void Start()
-    {
-        canvas = GetComponentInChildren<Canvas>();
-        if (leftPanel.panel.CurrentPosition == null)
-            leftPanel.panel.SetPosition(HideBottom, false);
-        if (rightPanel.panel.CurrentPosition == null)
-            rightPanel.panel.SetPosition(HideBottom, false);
-        canvas.gameObject.SetActive(false);
-    }
-    public static event EventHandler completeEvent;
+	#region Fields
+	[SerializeField] ConversationPanel leftPanel;
+	[SerializeField] ConversationPanel rightPanel;
 
-    public void Show(ConversationData data)
-    {
-        canvas.gameObject.SetActive(true);
-        conversation = Sequence(data);
-        conversation.MoveNext();
-    }
-    public void Next()
-    {
-        if (conversation == null || transition != null)
-            return;
+	Canvas canvas;
+	IEnumerator conversation;
+	Tweener transition;
+	#endregion
 
-        conversation.MoveNext();
-    }
+	#region MonoBehaviour
+	void Start()
+	{
+		canvas = GetComponentInChildren<Canvas>();
+		if (leftPanel.panel.CurrentPosition == null)
+			leftPanel.panel.SetPosition(HideBottom, false);
+		if (rightPanel.panel.CurrentPosition == null)
+			rightPanel.panel.SetPosition(HideBottom, false);
+		canvas.gameObject.SetActive(false);
+	}
+	#endregion
 
+	#region Public
+	public void Show(ConversationData data)
+	{
+		canvas.gameObject.SetActive(true);
+		conversation = Sequence(data);
+		conversation.MoveNext();
+	}
+
+	public void Next()
+	{
+		if (conversation == null || transition != null)
+			return;
+
+		conversation.MoveNext();
+	}
+	#endregion
+
+	#region Private
 	IEnumerator Sequence(ConversationData data)
 	{
 		for (int i = 0; i < data.list.Count; ++i)
@@ -71,7 +85,7 @@ public class ConversationController : MonoBehaviour
 				yield return null;
 
 			MovePanel(currentPanel, hide);
-			transition.easingControl.completedEvent += delegate (object sender, EventArgs e) {
+			transition.completedEvent += delegate (object sender, EventArgs e) {
 				conversation.MoveNext();
 			};
 
@@ -86,7 +100,8 @@ public class ConversationController : MonoBehaviour
 	void MovePanel(ConversationPanel obj, string pos)
 	{
 		transition = obj.panel.SetPosition(pos, true);
-		transition.easingControl.duration = 0.5f;
-		transition.easingControl.equation = EasingEquations.EaseOutQuad;
+		transition.duration = 0.5f;
+		transition.equation = EasingEquations.EaseOutQuad;
 	}
+	#endregion
 }

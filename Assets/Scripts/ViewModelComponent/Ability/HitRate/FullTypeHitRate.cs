@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class FullTypeHitRate : HitRate
 {
-    public override int Calculate(Unit attacker, Unit target)
-    {
-        if (AutomaticMiss(attacker, target))
-            return Final(100);
-        return Final(0);
-    }
+	public override bool IsAngleBased { get { return false; } }
+
+	public override int Calculate(Tile target)
+	{
+		Unit defender = target.content.GetComponent<Unit>();
+		if (AutomaticMiss(defender))
+			return Final(100);
+
+		return Final(0);
+	}
 }
